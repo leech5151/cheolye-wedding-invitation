@@ -71,7 +71,7 @@
 		left: 4em;
 
 		span.names {
-			color: #616161;
+			color: rgba(230, 210, 218, 0.9);
 			display: block;
 			font-size: 1rem;
 			letter-spacing: 0.8em;

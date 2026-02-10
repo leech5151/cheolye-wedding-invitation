@@ -5,6 +5,7 @@
 	import { _ } from 'svelte-i18n';
 	import { localeStore } from '../i18n.svelte';
 	import { Clipboard, Github } from '@lucide/svelte';
+	import Rsvp from './rsvp.svelte';
 
 	const addressKr = '서울 용산구 이태원로 29 로얄파크';
 	const addressEn = 'Royal Park, 29 Itaewon-ro, Yongsan-gu, Seoul';
@@ -33,6 +34,7 @@
 		<span class="map-hint {localeStore.locale}">{$_('location.map_hint')}</span>
 		<img class="location-map" src={locationMap} alt="로얄파크 컨벤션 위치" />
 	</a>
+	<Rsvp />
 	<p class="signature en">made with ♡ by Cheol-hee & Ye-jin</p>
 	<a class="github-icon" href="https://github.com/anthopark/our-wedding-invitation" target="_blank"
 		><Github size="1.1em" strokeWidth={1} /></a
@@ -112,7 +114,7 @@
 		position: relative;
 		display: block;
 		margin-top: 2em;
-		margin-bottom: 7em;
+		margin-bottom: 2em;
 		cursor: pointer;
 	}
 
@@ -137,6 +139,7 @@
 
 	p.signature {
 		font-size: 1rem;
+		margin-top: 2em;
 	}
 	.github-icon {
 		margin-top: 0.2em;

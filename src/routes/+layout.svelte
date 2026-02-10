@@ -29,11 +29,13 @@
 		rel="stylesheet"
 		href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
 	/>
-	<meta property="og:title" content="Emily & Anthony's Wedding" />
-	<meta property="og:description" content="Please join us on our most special day!" />
-	<meta property="og:image" content="https://emily-marries-anthony.com/preview.jpg" />
-	<meta property="og:url" content="https://emily-marries-anthony.com/" />
+	<meta property="og:title" content="이철희 & 이예진의 결혼식에 초대합니다" />
+	<meta property="og:description" content="2026년 7월 4일, 로얄파크컨벤션에서 진행됩니다. 따뜻한 마음으로 함께해 주세요." />
+	<meta property="og:image" content="https://leech5151.github.io/cheolye-wedding-invitation/cover.png" />
+	<meta property="og:url" content="https://leech5151.github.io/cheolye-wedding-invitation/" />
 	<meta property="og:type" content="website" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:image" content="https://leech5151.github.io/cheolye-wedding-invitation/cover.png" />
 </svelte:head>
 
 {#if localeLoaded}
