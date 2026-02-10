@@ -5,7 +5,6 @@
 	import { enhance } from '$app/forms';
 	import RsvpSelect from './rsvp-select.svelte';
 	import rsvpDeco from '$lib/assets/rsvp-deco.svg';
-	import RsvpAccordion from './rsvp-accordion.svelte';
 
 	let { form } = $props();
 
@@ -92,9 +91,7 @@
 		{/if}
 	</div>
 
-	<div class="accordion-container">
-		<RsvpAccordion />
-	</div>
+	<p class="floor-notice {localeStore.locale}">{$_('rsvp.floor_notice')}</p>
 </section>
 
 <style lang="scss">
@@ -233,10 +230,15 @@
 		}
 	}
 
-	.accordion-container {
+	.floor-notice {
 		margin-top: 2em;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
+		text-align: center;
+		color: $primary-color;
+		&.kr {
+			font-size: 0.95rem;
+		}
+		&.en {
+			font-size: 1rem;
+		}
 	}
 </style>

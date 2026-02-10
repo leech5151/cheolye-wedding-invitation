@@ -1,4 +1,5 @@
 <script lang="ts">
+	import coverImage from '$lib/assets/cover.png';
 	import { localeStore } from '../i18n.svelte';
 	import { browser } from '$app/environment';
 	import { Confetti } from 'svelte-confetti';
@@ -16,7 +17,10 @@
 	}
 </script>
 
-<section style:height={`${sectionHeight}px`} class="cover">
+<section
+	class="cover"
+	style="height: {sectionHeight}px; background-image: url({coverImage}); background-repeat: no-repeat; background-position: center center; background-size: cover;"
+>
 	<div class="confetti-area">
 		<Confetti
 			x={[-5, 5]}
@@ -31,14 +35,14 @@
 	</div>
 
 	<div class="names-kr-box">
-		<span class="names kr">박건희</span>
+		<span class="names kr">이철희</span>
 		<span class="names kr">그리고</span>
-		<span class="names kr">피아영</span>
+		<span class="names kr">이예진</span>
 	</div>
 
 	<div class="cover-title-container">
 		<div class="names-en-box">
-			<span class="names en-sacramento">Anthony & Emily</span>
+			<span class="names en-sacramento">Cheol-hee & Ye-jin</span>
 		</div>
 
 		<div class="event-date-and-place-box">
@@ -51,10 +55,6 @@
 <style lang="scss">
 	section.cover {
 		position: relative;
-		background-image: url('/src/lib/assets/cover.webp');
-		background-repeat: no-repeat;
-		background-position: center center;
-		background-size: cover;
 	}
 	.confetti-area {
 		position: absolute;
@@ -105,7 +105,8 @@
 		align-items: center;
 
 		span.event-date-and-time,
-		span.event-place {
+		span.event-place,
+		span.wedding-tagline {
 			display: block;
 			color: $white;
 
@@ -116,6 +117,12 @@
 			&.en {
 				font-size: 1.4rem;
 			}
+		}
+
+		span.wedding-tagline {
+			font-size: 0.9rem;
+			opacity: 0.9;
+			margin: 0.2em 0;
 		}
 
 		span.event-date-and-time.kr {

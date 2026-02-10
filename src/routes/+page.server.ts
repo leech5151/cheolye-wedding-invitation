@@ -3,7 +3,11 @@ import { Resend } from 'resend';
 import { env } from '$env/dynamic/private';
 import { fail } from '@sveltejs/kit';
 
-const resend = new Resend(env.RESEND_API_KEY);
+function getResend() {
+	const apiKey = env.RESEND_API_KEY;
+	if (!apiKey) return null;
+	return new Resend(apiKey);
+}
 
 export const actions = {
 	rsvp: async ({ request }) => {
@@ -19,7 +23,12 @@ export const actions = {
 			return fail(400, { missingRsvp: true });
 		}
 
-		const { data, error } = await resend.emails.send({
+		const resend = getResend();
+		if (!resend || !env.FROM_EMAIL || !env.TO_EMAIL) {
+			return fail(503, { name, emailError: true });
+		}
+
+		const { error } = await resend.emails.send({
 			from: env.FROM_EMAIL,
 			to: env.TO_EMAIL,
 			subject: `[Wedding Invitation] RSVP - ${name}`,

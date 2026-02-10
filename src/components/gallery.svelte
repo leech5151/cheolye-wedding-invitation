@@ -1,14 +1,12 @@
 <script lang="ts">
-	import photo2 from '$lib/assets/gallery/2.webp';
-	import photo3 from '$lib/assets/gallery/3.webp';
-	import photo4 from '$lib/assets/gallery/4.webp';
-	import photo5 from '$lib/assets/gallery/5.webp';
-	import photo6 from '$lib/assets/gallery/6.webp';
-	import photo7 from '$lib/assets/gallery/7.webp';
-	import photo8 from '$lib/assets/gallery/8.webp';
-	import photo9 from '$lib/assets/gallery/9.webp';
-	import photo10 from '$lib/assets/gallery/10.webp';
-	import photo11 from '$lib/assets/gallery/11.webp';
+	const galleryModules = import.meta.glob<{ default: string }>('$lib/assets/gallery/*.png', {
+		eager: true
+	});
+
+	const photos = Object.keys(galleryModules)
+		.filter((path) => !path.endsWith('014.png'))
+		.sort()
+		.map((path) => ({ src: galleryModules[path].default }));
 
 	import PhotoSwipeLightBox from 'photoswipe/lightbox';
 	import PhotoSwipe from 'photoswipe';
@@ -18,68 +16,46 @@
 	import { _ } from 'svelte-i18n';
 
 	onMount(() => {
-		const lightbox = new PhotoSwipeLightBox({
-			gallery: '#gallery',
-			children: 'a',
-			showHideAnimationType: 'fade',
-			pswpModule: PhotoSwipe
+		const gallery = document.querySelector('#gallery');
+		if (!gallery) return;
+
+		const slides = gallery.querySelectorAll('a.slide');
+		let loaded = 0;
+		let inited = false;
+
+		const tryInit = () => {
+			loaded++;
+			if (loaded < slides.length || inited) return;
+			inited = true;
+
+			const lightbox = new PhotoSwipeLightBox({
+				gallery: '#gallery',
+				children: 'a',
+				showHideAnimationType: 'fade',
+				pswpModule: PhotoSwipe
+			});
+			lightbox.init();
+		};
+
+		slides.forEach((anchor) => {
+			const img = anchor.querySelector('img');
+			if (!img) {
+				tryInit();
+				return;
+			}
+
+			const setSize = () => {
+				anchor.setAttribute('data-pswp-width', String(img.naturalWidth));
+				anchor.setAttribute('data-pswp-height', String(img.naturalHeight));
+				tryInit();
+			};
+
+			if (img.complete) setSize();
+			else img.addEventListener('load', setSize);
 		});
 
-		lightbox.init();
+		if (slides.length === 0) tryInit();
 	});
-
-	const photos = [
-		{
-			src: photo10,
-			width: 1200,
-			height: 1800
-		},
-		{
-			src: photo2,
-			width: 1200,
-			height: 1800
-		},
-		{
-			src: photo3,
-			width: 1200,
-			height: 1800
-		},
-		{
-			src: photo4,
-			width: 2000,
-			height: 1333
-		},
-		{
-			src: photo5,
-			width: 1200,
-			height: 1800
-		},
-		{
-			src: photo6,
-			width: 2000,
-			height: 1333
-		},
-		{
-			src: photo7,
-			width: 1200,
-			height: 1800
-		},
-		{
-			src: photo8,
-			width: 1200,
-			height: 1800
-		},
-		{
-			src: photo9,
-			width: 1200,
-			height: 1790
-		},
-		{
-			src: photo11,
-			width: 1200,
-			height: 1790
-		}
-	];
 </script>
 
 <section class="gallery">
@@ -89,13 +65,7 @@
 	</div>
 	<div id="gallery">
 		{#each photos as photo}
-			<a
-				href={photo.src}
-				class="slide"
-				data-pswp-width={photo.width}
-				data-pswp-height={photo.height}
-				target="_blank"
-			>
+			<a href={photo.src} class="slide" target="_blank">
 				<img class="thumbnail" src={photo.src} alt="" />
 			</a>
 		{/each}
@@ -141,25 +111,23 @@
 	#gallery {
 		display: grid;
 		gap: 1em;
-		grid-template-columns: repeat(2, 1fr);
-		grid-auto-rows: 6.5em;
+		grid-template-columns: repeat(3, 1fr);
+		grid-auto-rows: 10em;
+	}
+
+	a.slide {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 0;
+		background: #f8f6f4;
+		border-radius: 4px;
 	}
 
 	img.thumbnail {
 		border-radius: 4px;
 		width: 100%;
 		height: 100%;
-		object-fit: cover;
-	}
-
-	.slide:nth-child(1),
-	.slide:nth-child(2),
-	.slide:nth-child(3),
-	.slide:nth-child(5),
-	.slide:nth-child(7),
-	.slide:nth-child(8),
-	.slide:nth-child(9),
-	.slide:nth-child(10) {
-		grid-row: span 2;
+		object-fit: contain;
 	}
 </style>

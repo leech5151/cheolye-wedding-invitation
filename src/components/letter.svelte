@@ -1,5 +1,5 @@
 <script lang="ts">
-	import letterBottom from '$lib/assets/letter-bottom.webp';
+	import letterBottom from '$lib/assets/gallery/014.png';
 	import { _ } from 'svelte-i18n';
 	import { localeStore } from '../i18n.svelte';
 	import letterDeco from '$lib/assets/letter-deco.svg';
@@ -23,18 +23,18 @@
 		{#if localeStore.isEn}
 			<div class="letter-signature">
 				<p class="en">with love</p>
-				<p class="en">Emily & Anthony</p>
+				<p class="en">Cheol-hee & Ye-jin</p>
 			</div>
 		{:else}
 			<div class="family-description kr">
 				<p>
-					박주용<span class="name-divider">{@html nameDivider}</span> 김명숙
-					<span class="son">의 아들</span>박건희
+					이상원<span class="name-divider">{@html nameDivider}</span> 이인숙
+					<span class="son">의 장남</span>이철희
 				</p>
 				<p>
-					피세광<span class="name-divider">{@html nameDivider}</span> 윤은주<span class="daughter"
-						>의 딸</span
-					>피아영
+					이상억<span class="name-divider">{@html nameDivider}</span> 곽상란<span class="daughter"
+						>의 장녀</span
+					>이예진
 				</p>
 			</div>
 		{/if}
@@ -89,14 +89,19 @@
 	}
 
 	p.letter {
-		text-align: center;
 		&.kr {
 			line-height: 2.3em;
 			font-size: 0.9rem;
+			white-space: pre-line;
+			text-align: center;
+		}
+		&.en {
+			text-align: center;
 		}
 		&.en {
 			line-height: 1.8em;
 			font-size: 1.2rem;
+			white-space: pre-line;
 		}
 	}
 
@@ -133,5 +138,11 @@
 				color: $primary-color;
 			}
 		}
+	}
+
+	img.letter-bottom {
+		width: 100%;
+		display: block;
+		object-fit: cover;
 	}
 </style>

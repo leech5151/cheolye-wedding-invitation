@@ -1,17 +1,18 @@
 <script lang="ts">
 	import locationTopWave from '$lib/assets/location-top-wave.svg';
-
 	import locationDeco from '$lib/assets/location-deco.svg';
+	import locationMap from '$lib/assets/location-map.png';
 	import { _ } from 'svelte-i18n';
 	import { localeStore } from '../i18n.svelte';
 	import { Clipboard, Github } from '@lucide/svelte';
-	import { PUBLIC_GOOGLE_MAPS_API_KEY } from '$env/static/public';
 
-	const googleMapsUrl = `https://www.google.com/maps/embed/v1/place?key=${PUBLIC_GOOGLE_MAPS_API_KEY}&q=${encodeURIComponent('108 Lamplighter, Irvine, CA 92620')}`;
+	const addressKr = '서울 용산구 이태원로 29 로얄파크';
+	const addressEn = 'Royal Park, 29 Itaewon-ro, Yongsan-gu, Seoul';
 
 	function copyAddress() {
+		const text = localeStore.locale === 'kr' ? addressKr : addressEn;
 		navigator.clipboard
-			.writeText('108 Lamplighter, Irvine, CA 92620')
+			.writeText(text)
 			.then(() => alert($_('location.address_copied')))
 			.catch(() => null);
 	}
@@ -20,23 +21,19 @@
 <img src={locationTopWave} class="location-top-wave" alt="" />
 <section class="location">
 	<h2 class="title {localeStore.locale}">{$_('location.title')}</h2>
-	<p class="venue en">Woodbury Community Association</p>
-	<button class="copy-address en" onclick={copyAddress}>
+	<p class="venue {localeStore.locale}">{$_('location.venue')}</p>
+	<button class="copy-address {localeStore.locale}" onclick={copyAddress}>
 		<span class="clipboard-icon">
-			<Clipboard size="1.1em" />
+			<Clipboard size="1em" />
 		</span>
-		<span class="address">108 Lamplighter, Irvine, CA 92620</span></button
+		<span class="address">{$_('location.address')}</span></button
 	>
-	<div class="map">
-		<iframe
-			class="google-maps"
-			title="google maps"
-			allowfullscreen
-			referrerpolicy="no-referrer-when-downgrade"
-			src={googleMapsUrl}
-		></iframe>
-	</div>
-	<p class="signature en">made with ♡ by Emily & Anthony</p>
+	<p class="floor-notice {localeStore.locale}">{$_('location.floor_notice')}</p>
+	<a class="location-map-link" href="https://naver.me/IFgdRRqM" target="_blank" rel="noopener noreferrer">
+		<span class="map-hint {localeStore.locale}">{$_('location.map_hint')}</span>
+		<img class="location-map" src={locationMap} alt="로얄파크 컨벤션 위치" />
+	</a>
+	<p class="signature en">made with ♡ by Cheol-hee & Ye-jin</p>
 	<a class="github-icon" href="https://github.com/anthopark/our-wedding-invitation" target="_blank"
 		><Github size="1.1em" strokeWidth={1} /></a
 	>
@@ -62,29 +59,29 @@
 	h2.title {
 		color: $primary-color;
 		text-align: center;
-		margin-bottom: 1em;
+		margin-bottom: 0.8em;
 
 		&.kr {
 			@extend .title-font-kr;
 			letter-spacing: 1px;
+			font-size: 1.1rem;
 		}
 
 		&.en {
 			@extend .title-font-en;
 			letter-spacing: 1px;
+			font-size: 1.3rem;
 		}
 	}
 
 	p.venue {
-		&.en {
-			font-size: 1.1rem;
-		}
+		font-size: 0.95rem;
 	}
 
 	button.copy-address {
 		display: flex;
 		align-items: center;
-		margin-top: 0.5em;
+		margin-top: 0.4em;
 
 		.clipboard-icon {
 			height: 1em;
@@ -95,24 +92,47 @@
 
 		.address {
 			display: inline-block;
-			font-size: 1.2rem;
+			font-size: 0.9rem;
 			text-decoration: underline;
 		}
 	}
 
-	.map {
-		margin-top: 2em;
-		width: 100%;
-		height: 16em;
-		margin-bottom: 7em;
+	p.floor-notice {
+		margin-top: 0.5em;
+		font-size: 0.8rem;
+		color: $font-color-light;
+
+		&.kr,
+		&.en {
+			text-align: center;
+		}
 	}
 
-	iframe.google-maps {
+	a.location-map-link {
+		position: relative;
+		display: block;
+		margin-top: 2em;
+		margin-bottom: 7em;
+		cursor: pointer;
+	}
+
+	span.map-hint {
+		position: absolute;
+		top: 0.5em;
+		left: 50%;
+		transform: translateX(-50%);
+		font-size: 0.75rem;
+		color: $font-color-light;
+		z-index: 1;
+	}
+
+	img.location-map {
 		width: 100%;
-		height: 100%;
-		border: none;
+		max-width: $content-max-width;
+		height: auto;
 		border-radius: 8px;
 		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+		display: block;
 	}
 
 	p.signature {
