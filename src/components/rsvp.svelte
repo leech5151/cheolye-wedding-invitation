@@ -2,22 +2,63 @@
 	import { _ } from 'svelte-i18n';
 	import { localeStore } from '../i18n.svelte';
 	import { LoaderCircle } from '@lucide/svelte';
-	import { enhance } from '$app/forms';
+	import { env } from '$env/dynamic/public';
 	import RsvpSelect from './rsvp-select.svelte';
 	import rsvpDeco from '$lib/assets/rsvp-deco.svg';
 
-	let { form } = $props();
-
 	let rsvp = $state<'yes' | 'no' | null>(null);
 	let submitting = $state(false);
+	let message = $state<{ type: 'success' | 'error'; key: string } | null>(null);
 
-	function clearValidationMessage(formInput: 'name' | 'rsvp') {
-		if (formInput === 'name' && form?.missingName) {
-			form = null;
+	const formspreeEndpoint = env.PUBLIC_FORMSPREE_ENDPOINT || '';
+
+	function clearMessage() {
+		message = null;
+	}
+
+	async function handleSubmit(e: SubmitEvent) {
+		e.preventDefault();
+		const form = e.target as HTMLFormElement;
+		const name = (form.elements.namedItem('fullname') as HTMLInputElement)?.value?.trim();
+
+		if (!name) {
+			message = { type: 'error', key: 'missing_name_error' };
+			return;
+		}
+		if (!rsvp) {
+			message = { type: 'error', key: 'missing_rsvp_error' };
+			return;
+		}
+		if (!formspreeEndpoint) {
+			message = { type: 'error', key: 'email_error' };
+			return;
 		}
 
-		if (formInput === 'rsvp' && form?.missingRsvp) {
-			form = null;
+		submitting = true;
+		message = null;
+
+		try {
+			const res = await fetch(formspreeEndpoint, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					fullname: name,
+					rsvp,
+					_subject: `[Wedding RSVP] ${name}`
+				})
+			});
+
+			if (res.ok) {
+				message = { type: 'success', key: 'email_success' };
+				rsvp = null;
+				form.reset();
+			} else {
+				message = { type: 'error', key: 'email_error' };
+			}
+		} catch {
+			message = { type: 'error', key: 'email_error' };
+		} finally {
+			submitting = false;
 		}
 	}
 </script>
@@ -31,32 +72,15 @@
 		</p>
 	</div>
 
-	<form
-		class="rsvp-form"
-		method="POST"
-		action="?/rsvp"
-		use:enhance={({ formData }) => {
-			submitting = true;
-			formData.append('rsvp', rsvp ?? '');
-			return ({ update, result }) => {
-				update({}).finally(() => {
-					submitting = false;
-					if (result.status === 200) {
-						rsvp = null;
-					}
-				});
-			};
-		}}
-	>
+	<form class="rsvp-form" onsubmit={handleSubmit}>
 		<input
 			class="fullname {localeStore.locale}"
 			name="fullname"
-			value={form?.name ?? ''}
 			placeholder={$_('rsvp.fullname_placeholder')}
-			onfocus={() => clearValidationMessage('name')}
+			onfocus={clearMessage}
 		/>
 		<div class="select-container">
-			<RsvpSelect bind:rsvp clearForm={() => clearValidationMessage('rsvp')} />
+			<RsvpSelect bind:rsvp clearForm={clearMessage} />
 		</div>
 		<button class="send {localeStore.locale}" type="submit" disabled={submitting}>
 			{#if submitting}
@@ -69,24 +93,9 @@
 		</button>
 	</form>
 	<div class="submit-message">
-		{#if form?.success}
-			<p class="success {localeStore.locale}">
-				{$_('rsvp.email_success')}
-			</p>
-		{/if}
-		{#if form?.emailError}
-			<p class="error {localeStore.locale}">
-				{$_('rsvp.email_error')}
-			</p>
-		{/if}
-		{#if form?.missingName}
-			<p class="error {localeStore.locale}">
-				{$_('rsvp.missing_name_error')}
-			</p>
-		{/if}
-		{#if form?.missingRsvp}
-			<p class="error {localeStore.locale}">
-				{$_('rsvp.missing_rsvp_error')}
+		{#if message}
+			<p class="{message.type} {localeStore.locale}">
+				{$_(`rsvp.${message.key}`)}
 			</p>
 		{/if}
 	</div>
