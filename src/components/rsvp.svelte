@@ -72,33 +72,36 @@
 		</p>
 	</div>
 
-	<form class="rsvp-form" onsubmit={handleSubmit}>
-		<input
-			class="fullname {localeStore.locale}"
-			name="fullname"
-			placeholder={$_('rsvp.fullname_placeholder')}
-			onfocus={clearMessage}
-		/>
-		<div class="select-container">
-			<RsvpSelect bind:rsvp clearForm={clearMessage} />
-		</div>
-		<button class="send {localeStore.locale}" type="submit" disabled={submitting}>
-			{#if submitting}
-				<div class="spinning">
-					<LoaderCircle />
-				</div>
-			{:else}
-				{$_('rsvp.send')}
+	{#if false}
+		<!-- RSVP 참석 알리기 폼: 나중에 사용 시 if false → true -->
+		<form class="rsvp-form" onsubmit={handleSubmit}>
+			<input
+				class="fullname {localeStore.locale}"
+				name="fullname"
+				placeholder={$_('rsvp.fullname_placeholder')}
+				onfocus={clearMessage}
+			/>
+			<div class="select-container">
+				<RsvpSelect bind:rsvp clearForm={clearMessage} />
+			</div>
+			<button class="send {localeStore.locale}" type="submit" disabled={submitting}>
+				{#if submitting}
+					<div class="spinning">
+						<LoaderCircle />
+					</div>
+				{:else}
+					{$_('rsvp.send')}
+				{/if}
+			</button>
+		</form>
+		<div class="submit-message">
+			{#if message}
+				<p class="{message.type} {localeStore.locale}">
+					{$_(`rsvp.${message.key}`)}
+				</p>
 			{/if}
-		</button>
-	</form>
-	<div class="submit-message">
-		{#if message}
-			<p class="{message.type} {localeStore.locale}">
-				{$_(`rsvp.${message.key}`)}
-			</p>
-		{/if}
-	</div>
+		</div>
+	{/if}
 
 	<p class="floor-notice {localeStore.locale}">{$_('rsvp.floor_notice')}</p>
 </section>
