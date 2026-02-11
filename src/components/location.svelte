@@ -19,7 +19,7 @@
 			.catch(() => null);
 	}
 
-	const kakaoAppKey = '42c6ac76d4b6f9dfaa89cc1acb859621';
+	const kakaoAppKey = '46dfff729a8998eb0cfa0e6f84b735ba';
 	const inviteUrl = 'https://leech5151.github.io/cheolye-wedding-invitation/';
 	const locationUrl = 'https://naver.me/IFgdRRqM';
 
