@@ -21,10 +21,6 @@
 		<span class="clipboard-icon"><Clipboard size="1em" /></span>
 		<span class="address">{$_('gift.account_number')}</span>
 	</button>
-	<button class="copy-item {localeStore.locale}" onclick={() => copyText($_('gift.holder_name'))}>
-		<span class="clipboard-icon"><Clipboard size="1em" /></span>
-		<span class="address">{$_('gift.holder_name')}</span>
-	</button>
 </section>
 
 <style lang="scss">
