@@ -8,9 +8,12 @@
 	let { children } = $props();
 
 	let localeLoaded = $derived(!localeStore.isLoading && localeStore.locale);
-	let title = $state('');
+	let title = $state('이철희와 이예진의 결혼식에 초대합니다.');
 	onMount(() => {
 		document.body.classList.add('loaded');
+	});
+
+	$effect(() => {
 		if (localeLoaded) {
 			title = $_('meta.title');
 		}
@@ -29,6 +32,7 @@
 		rel="stylesheet"
 		href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
 	/>
+	<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 	<meta property="og:title" content="이철희 & 이예진의 결혼식에 초대합니다" />
 	<meta property="og:description" content="2026년 7월 4일, 로얄파크컨벤션에서 진행됩니다. 따뜻한 마음으로 함께해 주세요." />
 	<meta property="og:image" content="https://leech5151.github.io/cheolye-wedding-invitation/cover.png" />

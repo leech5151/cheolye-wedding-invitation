@@ -5,6 +5,7 @@
 	import { _ } from 'svelte-i18n';
 	import { localeStore } from '../i18n.svelte';
 	import { Clipboard, Github } from '@lucide/svelte';
+	import { onMount } from 'svelte';
 	import Rsvp from './rsvp.svelte';
 
 	const addressKr = '서울 용산구 이태원로 29 로얄파크';
@@ -16,6 +17,50 @@
 			.writeText(text)
 			.then(() => alert($_('location.address_copied')))
 			.catch(() => null);
+	}
+
+	const kakaoAppKey = '42c6ac76d4b6f9dfaa89cc1acb859621';
+	const inviteUrl = 'https://leech5151.github.io/cheolye-wedding-invitation/';
+	const locationUrl = 'https://naver.me/IFgdRRqM';
+
+	onMount(() => {
+		const kakao = (window as Window & { Kakao?: any }).Kakao;
+		if (kakao && !kakao.isInitialized()) {
+			kakao.init(kakaoAppKey);
+		}
+	});
+
+	function shareKakao() {
+		const kakao = (window as Window & { Kakao?: any }).Kakao;
+		if (!kakao) return;
+		kakao.Link.sendDefault({
+			objectType: 'feed',
+			content: {
+				title: '이철희 & 이예진의 결혼식',
+				description: '2026년 7월 4일 로얄파크컨벤션',
+				imageUrl: 'https://leech5151.github.io/cheolye-wedding-invitation/cover.png',
+				link: {
+					mobileWebUrl: inviteUrl,
+					webUrl: inviteUrl
+				}
+			},
+			buttons: [
+				{
+					title: '청첩장보기',
+					link: {
+						mobileWebUrl: inviteUrl,
+						webUrl: inviteUrl
+					}
+				},
+				{
+					title: '위치',
+					link: {
+						mobileWebUrl: locationUrl,
+						webUrl: locationUrl
+					}
+				}
+			]
+		});
 	}
 </script>
 
@@ -34,6 +79,7 @@
 		<span class="map-hint {localeStore.locale}">{$_('location.map_hint')}</span>
 		<img class="location-map" src={locationMap} alt="로얄파크 컨벤션 위치" />
 	</a>
+	<button class="kakao-share" onclick={shareKakao}>카카오톡으로 공유</button>
 	<Rsvp />
 	<p class="signature en">made with ♡ by Cheol-hee & Ye-jin</p>
 	<a class="github-icon" href="https://github.com/anthopark/our-wedding-invitation" target="_blank"
@@ -135,6 +181,16 @@
 		border-radius: 8px;
 		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 		display: block;
+	}
+
+	button.kakao-share {
+		margin-top: 0.8em;
+		padding: 0.6em 1.2em;
+		border-radius: 4px;
+		background-color: #fee500;
+		color: #3c1e1e;
+		font-size: 0.95rem;
+		font-weight: 600;
 	}
 
 	p.signature {
