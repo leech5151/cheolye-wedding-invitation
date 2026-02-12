@@ -1,8 +1,8 @@
 <script lang="ts">
 	import locationTopWave from '$lib/assets/location-top-wave.svg';
 	import locationDeco from '$lib/assets/location-deco.svg';
-	import locationMap from '$lib/assets/location-map.png';
 	import { _ } from 'svelte-i18n';
+	import { base } from '$app/paths';
 	import { localeStore } from '../i18n.svelte';
 	import { Clipboard, Github } from '@lucide/svelte';
 	import { onMount } from 'svelte';
@@ -21,13 +21,51 @@
 
 	const kakaoAppKey = '46dfff729a8998eb0cfa0e6f84b735ba';
 	const inviteUrl = 'https://leech5151.github.io/cheolye-wedding-invitation/';
-	const locationUrl = 'https://naver.me/IFgdRRqM';
+	const kakaoMapUrl = 'https://kko.to/ptrfQ12DQ9';
+	const naverMapUrl = 'https://map.naver.com/v5/search/로얄파크컨벤션';
+	const tmapUrl = 'https://tmap.co.kr';
+	const placeKeyword = '로얄파크컨벤션';
+	// 로얄파크컨벤션 fallback (삼각지역 12번출구 인근)
+	const fallbackLat = 37.5348;
+	const fallbackLng = 126.9712;
 
 	onMount(() => {
 		const kakao = (window as Window & { Kakao?: any }).Kakao;
 		if (kakao && !kakao.isInitialized()) {
 			kakao.init(kakaoAppKey);
 		}
+
+		function createMap(km: any, lat: number, lng: number) {
+			const container = document.getElementById('kakao-map');
+			if (!container) return;
+			const coords = new km.LatLng(lat, lng);
+			const options = { center: coords, level: 5, draggable: false, scrollwheel: false };
+			const map = new km.Map(container, options);
+			const marker = new km.Marker({ position: coords });
+			marker.setMap(map);
+		}
+
+		function initMap() {
+			const w = window as Window & { kakao?: { maps: any } };
+			if (!w.kakao?.maps?.load) {
+				setTimeout(initMap, 150);
+				return;
+			}
+			const km = w.kakao.maps;
+			km.load(() => {
+				const places = new km.services.Places();
+				places.keywordSearch(placeKeyword, (result: { x: string; y: string; place_name: string }[], status: string) => {
+					const ok = km.services.Status?.OK ?? 'OK';
+					if (status === ok && result?.[0]) {
+						const place = result[0];
+						createMap(km, Number(place.y), Number(place.x));
+					} else {
+						createMap(km, fallbackLat, fallbackLng);
+					}
+				});
+			});
+		}
+		initMap();
 	});
 
 	function shareKakao() {
@@ -55,8 +93,8 @@
 				{
 					title: '위치',
 					link: {
-						mobileWebUrl: locationUrl,
-						webUrl: locationUrl
+						mobileWebUrl: kakaoMapUrl,
+						webUrl: kakaoMapUrl
 					}
 				}
 			]
@@ -75,10 +113,30 @@
 		<span class="address">{$_('location.address')}</span></button
 	>
 	<p class="floor-notice {localeStore.locale}">{$_('location.floor_notice')}</p>
-	<a class="location-map-link" href="https://naver.me/IFgdRRqM" target="_blank" rel="noopener noreferrer">
-		<span class="map-hint {localeStore.locale}">{$_('location.map_hint')}</span>
-		<img class="location-map" src={locationMap} alt="로얄파크 컨벤션 위치" />
+	<div class="parking-info {localeStore.locale}">
+		<p class="parking-title">{$_('location.parking.title')}</p>
+		<ul>
+			<li>{$_('location.parking.item1')}</li>
+			<li>{$_('location.parking.item3')}</li>
+		</ul>
+	</div>
+	<a class="map-wrapper map-link" href={kakaoMapUrl} target="_blank" rel="noopener noreferrer">
+		<div id="kakao-map" class="kakao-map"></div>
 	</a>
+	<div class="map-buttons">
+		<a class="map-btn" href={tmapUrl} target="_blank" rel="noopener noreferrer">
+			<img src={`${base}/tmap-logo.png`} alt="티맵" class="map-btn-icon" />
+			<span>티맵</span>
+		</a>
+		<a class="map-btn" href={kakaoMapUrl} target="_blank" rel="noopener noreferrer">
+			<img src={`${base}/kakaonavi-icon.svg`} alt="카카오네비" class="map-btn-icon" />
+			<span>카카오네비</span>
+		</a>
+		<a class="map-btn" href={naverMapUrl} target="_blank" rel="noopener noreferrer">
+			<img src={`${base}/navermap-icon.svg`} alt="네이버지도" class="map-btn-icon" />
+			<span>네이버지도</span>
+		</a>
+	</div>
 	<button class="kakao-share" onclick={shareKakao}>카카오톡으로 공유</button>
 	<Rsvp />
 	<p class="signature en">made with ♡ by Cheol-hee & Ye-jin</p>
@@ -156,41 +214,99 @@
 		}
 	}
 
-	a.location-map-link {
+	.parking-info {
+		margin-top: 0.8em;
+		font-size: 0.8rem;
+		color: $font-color-light;
+
+		&.kr,
+		&.en {
+			text-align: center;
+		}
+
+		.parking-title {
+			margin-bottom: 0.3em;
+			font-weight: 600;
+		}
+
+		ul {
+			margin: 0;
+			padding-left: 0;
+			list-style: none;
+		}
+
+		li {
+			margin-top: 0.2em;
+		}
+	}
+
+	.map-wrapper {
 		position: relative;
-		display: block;
 		margin-top: 2em;
-		margin-bottom: 2em;
+		width: 100%;
+		max-width: $content-max-width;
+		display: block;
+		text-decoration: none;
 		cursor: pointer;
 	}
 
-	span.map-hint {
-		position: absolute;
-		top: 0.5em;
-		left: 50%;
-		transform: translateX(-50%);
-		font-size: 0.75rem;
-		color: $font-color-light;
-		z-index: 1;
+	.map-wrapper.map-link .kakao-map {
+		pointer-events: none;
 	}
 
-	img.location-map {
+	.kakao-map {
+		width: 100%;
+		height: 280px;
+		border-radius: 12px;
+		border: 2px solid $primary-color-light-2;
+		box-shadow: 0 4px 16px rgba(185, 148, 147, 0.2);
+		overflow: hidden;
+	}
+
+	.map-buttons {
+		display: flex;
+		gap: 0.5em;
+		margin-top: 1em;
+		margin-bottom: 0em;
 		width: 100%;
 		max-width: $content-max-width;
-		height: auto;
+	}
+
+	.map-btn {
+		flex: 1;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5em;
+		padding: 0.6em 0.5em;
+		background: $white;
+		border: 1px solid $primary-color-light-2;
 		border-radius: 8px;
-		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-		display: block;
+		font-family: 'Noto Serif KR', serif;
+		font-size: 0.9rem;
+		font-weight: 500;
+		color: $primary-color;
+		text-decoration: none;
+	}
+
+	.map-btn-icon {
+		width: 24px;
+		height: 24px;
+		object-fit: contain;
+		flex-shrink: 0;
 	}
 
 	button.kakao-share {
 		margin-top: 0.8em;
+		margin-bottom: 2em;
 		padding: 0.6em 1.2em;
 		border-radius: 4px;
 		background-color: #fee500;
+		font-family: 'Noto Serif KR', serif;
+		font-size: 0.9rem;
+		font-weight: 500;
 		color: #3c1e1e;
-		font-size: 0.95rem;
-		font-weight: 600;
 	}
 
 	p.signature {
