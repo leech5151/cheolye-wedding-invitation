@@ -32,7 +32,12 @@
 				gallery: '#gallery',
 				children: 'a',
 				showHideAnimationType: 'fade',
-				pswpModule: PhotoSwipe
+				pswpModule: PhotoSwipe,
+				initialZoomLevel: 'fit',
+				secondaryZoomLevel: 'fit',
+				maxZoomLevel: 1,
+				doubleTapAction: false,
+				wheelToZoom: false
 			});
 			lightbox.init();
 		};
@@ -129,5 +134,13 @@
 		width: 100%;
 		height: 100%;
 		object-fit: contain;
+	}
+
+	/* 줌 비활성화 - 버튼 숨김, 커서 기본값 */
+	:global(.pswp__button--zoom) {
+		display: none;
+	}
+	:global(.pswp__img) {
+		cursor: default !important;
 	}
 </style>
