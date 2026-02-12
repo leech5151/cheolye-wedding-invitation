@@ -126,15 +126,15 @@
 	<div class="map-buttons">
 		<a class="map-btn" href={tmapUrl} target="_blank" rel="noopener noreferrer">
 			<img src={`${base}/tmap-logo.png`} alt="티맵" class="map-btn-icon" />
-			<span class="map-btn-text">티맵</span>
+			<span>티맵</span>
 		</a>
 		<a class="map-btn" href={kakaoMapUrl} target="_blank" rel="noopener noreferrer">
 			<img src={`${base}/kakaonavi-icon.svg`} alt="카카오네비" class="map-btn-icon" />
-			<span class="map-btn-text">카카오네비</span>
+			<span>카카오네비</span>
 		</a>
 		<a class="map-btn" href={naverMapUrl} target="_blank" rel="noopener noreferrer">
 			<img src={`${base}/navermap-icon.svg`} alt="네이버지도" class="map-btn-icon" />
-			<span class="map-btn-text">네이버지도</span>
+			<span>네이버지도</span>
 		</a>
 	</div>
 	<button class="kakao-share" onclick={shareKakao}>카카오톡으로 공유</button>
@@ -265,14 +265,14 @@
 
 	.map-buttons {
 		display: flex;
-		gap: 1em;
+		gap: 0.5em;
 		margin-top: 1em;
 		margin-bottom: 0em;
 		width: 100%;
 		max-width: $content-max-width;
 
 		@media (max-width: 600px) {
-			gap: 0.25em;
+			gap: 0.2em;
 		}
 	}
 
@@ -283,7 +283,7 @@
 		align-items: center;
 		justify-content: center;
 		gap: 0.35em;
-		padding: 0.5em 0.35em;
+		padding: 0.6em 0.5em;
 		background: $white;
 		border: 1px solid $primary-color-light-2;
 		border-radius: 8px;
@@ -292,17 +292,12 @@
 		font-weight: 500;
 		color: $primary-color;
 		text-decoration: none;
+		white-space: nowrap;
 
 		@media (max-width: 600px) {
-			gap: 0;
-			padding: 0.5em;
-			font-size: 0.75rem;
-		}
-	}
-
-	.map-btn-text {
-		@media (max-width: 600px) {
-			display: none;
+			gap: 0.2em;
+			padding: 0.5em 0.25em;
+			font-size: 0.55rem;
 		}
 	}
 
@@ -311,11 +306,10 @@
 		height: 24px;
 		object-fit: contain;
 		flex-shrink: 0;
-		margin-right: 0.5em;
 
 		@media (max-width: 600px) {
-			width: 18px;
-			height: 18px;
+			width: 16px;
+			height: 16px;
 		}
 	}
 
