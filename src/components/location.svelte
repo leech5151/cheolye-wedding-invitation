@@ -265,11 +265,15 @@
 
 	.map-buttons {
 		display: flex;
-		gap: 0.5em;
+		gap: 1em;
 		margin-top: 1em;
 		margin-bottom: 0em;
 		width: 100%;
 		max-width: $content-max-width;
+
+		@media (max-width: 410px) {
+			gap: 0.25em;
+		}
 	}
 
 	.map-btn {
@@ -278,8 +282,8 @@
 		flex-direction: row;
 		align-items: center;
 		justify-content: center;
-		gap: 0.5em;
-		padding: 0.6em 0.5em;
+		gap: 0.35em;
+		padding: 0.5em 0.35em;
 		background: $white;
 		border: 1px solid $primary-color-light-2;
 		border-radius: 8px;
@@ -288,6 +292,12 @@
 		font-weight: 500;
 		color: $primary-color;
 		text-decoration: none;
+
+		@media (max-width: 410px) {
+			gap: 0.2em;
+			padding: 0.45em 0.2em;
+			font-size: 0.75rem;
+		}
 	}
 
 	.map-btn-icon {
@@ -295,6 +305,12 @@
 		height: 24px;
 		object-fit: contain;
 		flex-shrink: 0;
+		margin-right: 0.5em;
+
+		@media (max-width: 410px) {
+			width: 18px;
+			height: 18px;
+		}
 	}
 
 	button.kakao-share {
