@@ -129,12 +129,12 @@
 			<span class="map-btn-text">티맵</span>
 		</a>
 		<a class="map-btn" href={kakaoMapUrl} target="_blank" rel="noopener noreferrer">
-			<img src={`${base}/kakaonavi-icon.svg`} alt="카카오네비" class="map-btn-icon" />
-			<span class="map-btn-text">카카오네비</span>
+			<img src={`${base}/kakaonavi-icon.svg`} alt="카카오" class="map-btn-icon" />
+			<span class="map-btn-text">카카오</span>
 		</a>
 		<a class="map-btn" href={naverMapUrl} target="_blank" rel="noopener noreferrer">
-			<img src={`${base}/navermap-icon.svg`} alt="네이버지도" class="map-btn-icon" />
-			<span class="map-btn-text">네이버지도</span>
+			<img src={`${base}/navermap-icon.svg`} alt="네이버" class="map-btn-icon" />
+			<span class="map-btn-text">네이버</span>
 		</a>
 	</div>
 	<button class="kakao-share" onclick={shareKakao}>카카오톡으로 공유</button>
