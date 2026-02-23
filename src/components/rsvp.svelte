@@ -23,14 +23,6 @@
 		{ labelKey: 'gift.bride_host_father_label', valueKey: 'gift.bride_host_father', holderKey: 'gift.bride_host_father_holder' }
 	];
 
-	function formatAccountDisplay(row: AccountRow): string {
-		const value = $_(row.valueKey);
-		const holder = $_(row.holderKey);
-		if (!value) return '—';
-		if (holder) return `${value} (${holder})`;
-		return value;
-	}
-
 	let popup: 'groom' | 'bride' | null = null;
 
 	function openPopup(side: 'groom' | 'bride') {
@@ -64,7 +56,16 @@
 					{#each groomRows as row}
 						<div class="popup-row">
 							<span class="popup-label">{$_(row.labelKey)}</span>
-							<span class="popup-value">{formatAccountDisplay(row)}</span>
+							<span class="popup-value">
+								{#if $_(row.valueKey)}
+									<span class="popup-account">{$_(row.valueKey)}</span>
+									{#if $_(row.holderKey)}
+										<span class="popup-holder">({$_(row.holderKey)})</span>
+									{/if}
+								{:else}
+									—
+								{/if}
+							</span>
 							{#if $_(row.valueKey)}
 								<button
 									class="popup-copy"
@@ -80,7 +81,16 @@
 					{#each brideRows as row}
 						<div class="popup-row">
 							<span class="popup-label">{$_(row.labelKey)}</span>
-							<span class="popup-value">{formatAccountDisplay(row)}</span>
+							<span class="popup-value">
+								{#if $_(row.valueKey)}
+									<span class="popup-account">{$_(row.valueKey)}</span>
+									{#if $_(row.holderKey)}
+										<span class="popup-holder">({$_(row.holderKey)})</span>
+									{/if}
+								{:else}
+									—
+								{/if}
+							</span>
 							{#if $_(row.valueKey)}
 								<button
 									class="popup-copy"
@@ -216,7 +226,20 @@
 		min-width: 0;
 		font-size: 0.85rem;
 		color: $font-color-default;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
 		word-break: break-all;
+
+		.popup-account {
+			display: block;
+		}
+
+		.popup-holder {
+			display: block;
+			margin-top: 0.2em;
+			padding-left: 0.5em;
+		}
 	}
 
 	.popup-copy {
