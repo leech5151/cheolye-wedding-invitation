@@ -139,6 +139,7 @@
 	</div>
 	<button class="kakao-share" onclick={shareKakao}>카카오톡으로 공유</button>
 	<Rsvp />
+	<p class="flower-notice {localeStore.locale}">{$_('gift.flower_notice')}</p>
 	<p class="signature en">made with ♡ by Cheol-hee & Ye-jin</p>
 	<a class="github-icon" href="https://github.com/anthopark/our-wedding-invitation" target="_blank"
 		><Github size="1.1em" strokeWidth={1} /></a
@@ -323,6 +324,18 @@
 		font-size: 0.9rem;
 		font-weight: 500;
 		color: #3c1e1e;
+
+		@media (max-width: 600px) {
+			padding: 0.5em 0.8em;
+			font-size: 0.75rem;
+		}
+	}
+
+	p.flower-notice {
+		margin-top: 1em;
+		font-size: 0.85rem;
+		color: $font-color-default;
+		text-align: center;
 	}
 
 	p.signature {
